@@ -66,8 +66,7 @@ jobs:
 
         args: ${{ steps.cmake_args.outputs.flags }}
         run-build: true
-        build-args: --config Release
-        run-install: true
+        build-args: --config Release --target install
 
     # ---------------------------
     #   STORE RESULTS IN REPO
