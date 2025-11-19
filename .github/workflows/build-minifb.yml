@@ -82,7 +82,7 @@ jobs:
         rm -rf "$OUTDIR"
         mkdir -p "$OUTDIR"
         cp -r install/* "$OUTDIR"/.
-        git add -A "$OUTDIR"
+        git add --force -A "$OUTDIR"
 
         if git diff --cached --quiet; then
           echo "No changes to commit. Exiting"
