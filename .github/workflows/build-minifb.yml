@@ -80,6 +80,8 @@ jobs:
 
         OUTDIR="ci_builds/${{ matrix.os }}"
         
+        mkdir -p "$OUTDIR"
+        cp -r install/* "$OUTDIR"/.
         git add "$OUTDIR"
 
         if git diff --cached --quiet; then
@@ -92,7 +94,7 @@ jobs:
         git rm -r "$OUTDIR"
         
         mkdir -p "$OUTDIR"
-        cp -r install/* "$OUTDIR"/
+        cp -r install/* "$OUTDIR"/.
         git add "$OUTDIR"
 
         git commit -m "Manual CI build (${{ matrix.os }})"
