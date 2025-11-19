@@ -19,8 +19,6 @@ permissions:
 jobs:
   build:
     runs-on: ${{ github.event.inputs.target_os }}
-    strategy:
-      fail-fast: false
 
     steps:
     - name: Checkout repository with submodules
@@ -87,10 +85,10 @@ jobs:
 
         OUTDIR="ci_builds/${{ github.event.inputs.target_os }}"
         
+        rm -rf "$OUTDIR"
         mkdir -p "$OUTDIR"
-        rm -rf "$OUTDIR"/*
         cp -r install/* "$OUTDIR"/.
-        git add --force -A "$OUTDIR"
+        git add -A "$OUTDIR"
 
         if git diff --cached --quiet; then
           echo "No changes to commit. Exiting"
