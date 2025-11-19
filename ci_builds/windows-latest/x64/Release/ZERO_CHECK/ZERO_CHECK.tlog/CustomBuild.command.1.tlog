@@ -1,0 +1,10 @@
+^D:\A\MINIFB-BUILDS\MINIFB-BUILDS\BUILD\CMAKEFILES\41C3CC8DBBC9B78523DDF63044EBAF51\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SD:/a/minifb-builds/minifb-builds/minifb-repo -BD:/a/minifb-builds/minifb-builds/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file D:/a/minifb-builds/minifb-builds/build/MiniFB.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
