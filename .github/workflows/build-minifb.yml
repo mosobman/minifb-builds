@@ -41,7 +41,8 @@ jobs:
       shell: bash # Use bash for robust conditional logic across all OSes
       run: |
         # Common flags
-        CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF"
+        INSTALL_DIR="${{ github.workspace }}/install"
+        CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR"
 
         if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
           # Ubuntu: Use OpenGL and specifically disable Wayland
@@ -63,10 +64,10 @@ jobs:
         source-dir: minifb-repo
         build-dir: build
 
-        # Valid inputs exactly as the action defines
         args: ${{ steps.cmake_args.outputs.flags }}
         run-build: true
-        build-args: --config Release --target install
+        build-args: --config Release
+        run-install: true
 
     # ---------------------------
     #   STORE RESULTS IN REPO
@@ -79,7 +80,7 @@ jobs:
 
         OUTDIR="ci_builds/${{ matrix.os }}"
         mkdir -p "$OUTDIR"
-        cp -r build/* "$OUTDIR"/ #TODO# Ensure copying correct artifacts
+        cp -r install/* "$OUTDIR"/ #TODO# Ensure copying correct artifacts
 
         git add "$OUTDIR"
 
