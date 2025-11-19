@@ -92,4 +92,4 @@ jobs:
         echo "Changes detected! Proceeding with clean and commit."
 
         git commit -m "Manual CI build (${{ matrix.os }})"
-        git push "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" HEAD:$(git rev-parse --abbrev-ref HEAD)
+        git push --force "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" HEAD:$(git rev-parse --abbrev-ref HEAD)
