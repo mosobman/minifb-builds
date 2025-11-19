@@ -1,0 +1,8 @@
+C:/Program Files (x86)/MiniFB/lib/minifb.lib
+C:/Program Files (x86)/MiniFB/include/MiniFB.h
+C:/Program Files (x86)/MiniFB/include/MiniFB_cpp.h
+C:/Program Files (x86)/MiniFB/include/MiniFB_enums.h
+C:/Program Files (x86)/MiniFB/include/MiniFB_ios.h
+C:/Program Files (x86)/MiniFB/include/MiniFB_keylist.h
+C:/Program Files (x86)/MiniFB/lib/cmake/minifb/minifb-config.cmake
+C:/Program Files (x86)/MiniFB/lib/cmake/minifb/minifb-config-release.cmake

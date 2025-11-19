@@ -1,0 +1,12 @@
+D:/a/minifb-builds/minifb-builds/build/CMakeFiles/minifb.dir
+D:/a/minifb-builds/minifb-builds/build/CMakeFiles/noise.dir
+D:/a/minifb-builds/minifb-builds/build/CMakeFiles/input_events.dir
+D:/a/minifb-builds/minifb-builds/build/CMakeFiles/input_events_cpp.dir
+D:/a/minifb-builds/minifb-builds/build/CMakeFiles/multiple_windows.dir
+D:/a/minifb-builds/minifb-builds/build/CMakeFiles/hidpi.dir
+D:/a/minifb-builds/minifb-builds/build/CMakeFiles/fullscreen.dir
+D:/a/minifb-builds/minifb-builds/build/CMakeFiles/timer.dir
+D:/a/minifb-builds/minifb-builds/build/CMakeFiles/hide_cursor.dir
+D:/a/minifb-builds/minifb-builds/build/CMakeFiles/INSTALL.dir
+D:/a/minifb-builds/minifb-builds/build/CMakeFiles/ALL_BUILD.dir
+D:/a/minifb-builds/minifb-builds/build/CMakeFiles/ZERO_CHECK.dir
