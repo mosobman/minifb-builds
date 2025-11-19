@@ -98,4 +98,5 @@ jobs:
         echo "Changes detected! Proceeding with clean and commit."
 
         git commit -m "Manual CI build (${{ github.event.inputs.target_os }})"
-        git push --force "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" HEAD:$(git rev-parse --abbrev-ref HEAD)
+        git fetch
+        git push --force-with-lease "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" HEAD:$(git rev-parse --abbrev-ref HEAD)
