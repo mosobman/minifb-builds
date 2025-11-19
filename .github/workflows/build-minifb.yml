@@ -79,15 +79,21 @@ jobs:
         git config user.email "github-actions[bot]@users.noreply.github.com"
 
         OUTDIR="ci_builds/${{ matrix.os }}"
-        mkdir -p "$OUTDIR"
-        cp -r install/* "$OUTDIR"/ #TODO# Ensure copying correct artifacts
-
+        
         git add "$OUTDIR"
 
         if git diff --cached --quiet; then
           echo "No changes to commit. Exiting"
           exit 0
         fi
+
+        echo "Changes detected! Proceeding with clean and commit."
+
+        git rm -r "$OUTDIR"
+        
+        mkdir -p "$OUTDIR"
+        cp -r install/* "$OUTDIR"/
+        git add "$OUTDIR"
 
         git commit -m "Manual CI build (${{ matrix.os }})"
         git push "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" HEAD:$(git rev-parse --abbrev-ref HEAD)
