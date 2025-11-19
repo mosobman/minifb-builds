@@ -16,6 +16,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         submodules: recursive
+        token: ${{ secrets.GITHUB_TOKEN }}
 
     # ---------------------------
     #      CMAKE BUILD STEP
@@ -30,9 +31,10 @@ jobs:
         args: >
           -DCMAKE_BUILD_TYPE=Release
           -DUSE_OPENGL_API=ON
+          -DBUILD_SHARED_LIBS=OFF
 
         run-build: true
-        build-args: --config Release
+        build-args: --config Release --target install
 
     # ---------------------------
     #   STORE RESULTS IN REPO
