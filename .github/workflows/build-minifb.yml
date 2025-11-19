@@ -1,14 +1,24 @@
 name: MiniFB CMake Build
 
-on:
-  workflow_dispatch:   # Manual only
+on: # Manual only
+  workflow_dispatch:
+    inputs:
+      target_os:
+        description: 'Select the operating system to build'
+        required: true
+        default: 'windows-latest'
+        type: choice
+        options:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
 
 permissions:
   contents: write
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ github.event.inputs.target_os }}
     strategy:
       fail-fast: false
       matrix:
@@ -25,7 +35,7 @@ jobs:
     #      CMAKE BUILD STEP
     # ---------------------------
     - name: Install Ubuntu Dependencies
-      if: matrix.os == 'ubuntu-latest'
+      if: github.event.inputs.target_os == 'ubuntu-latest'
       run: |
         sudo apt-get update
         sudo apt-get install -y \
@@ -44,10 +54,10 @@ jobs:
         INSTALL_DIR="${{ github.workspace }}/install"
         CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR"
 
-        if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
+        if [ "${{ github.event.inputs.target_os }}" == "ubuntu-latest" ]; then
           # Ubuntu: Use OpenGL and specifically disable Wayland
           CMAKE_FLAGS="$CMAKE_FLAGS -DUSE_OPENGL_API=ON -DUSE_WAYLAND_API=OFF"
-        elif [ "${{ matrix.os }}" == "macos-latest" ]; then
+        elif [ "${{ github.event.inputs.target_os }}" == "macos-latest" ]; then
           # macOS: Omit OpenGL and use Metal
           CMAKE_FLAGS="$CMAKE_FLAGS -DUSE_METAL_API=ON"
         else
@@ -77,7 +87,7 @@ jobs:
         git config user.name "github-actions-by-${{ github.actor }}"
         git config user.email "github-actions[bot]@users.noreply.github.com"
 
-        OUTDIR="ci_builds/${{ matrix.os }}"
+        OUTDIR="ci_builds/${{ github.event.inputs.target_os }}"
         
         mkdir -p "$OUTDIR"
         rm -rf "$OUTDIR"/*
@@ -91,5 +101,5 @@ jobs:
 
         echo "Changes detected! Proceeding with clean and commit."
 
-        git commit -m "Manual CI build (${{ matrix.os }})"
+        git commit -m "Manual CI build (${{ github.event.inputs.target_os }})"
         git push --force-with-lease "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" HEAD:$(git rev-parse --abbrev-ref HEAD)
