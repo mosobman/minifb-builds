@@ -3,6 +3,9 @@ name: MiniFB CMake Build
 on:
   workflow_dispatch:   # Manual only
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -21,6 +24,39 @@ jobs:
     # ---------------------------
     #      CMAKE BUILD STEP
     # ---------------------------
+    - name: Install Ubuntu Dependencies
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+            build-essential \
+            cmake \
+            pkg-config \
+            libx11-dev \
+            libxkbcommon-dev \
+            libgl1-mesa-dev
+
+    - name: Configure CMake Arguments
+      id: cmake_args
+      shell: bash # Use bash for robust conditional logic across all OSes
+      run: |
+        # Common flags
+        CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF"
+
+        if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
+          # Ubuntu: Use OpenGL and specifically disable Wayland
+          CMAKE_FLAGS="$CMAKE_FLAGS -DUSE_OPENGL_API=ON -DUSE_WAYLAND_API=OFF"
+        elif [ "${{ matrix.os }}" == "macos-latest" ]; then
+          # macOS: Omit OpenGL and use Metal
+          CMAKE_FLAGS="$CMAKE_FLAGS -DUSE_METAL_API=ON"
+        else
+          # Windows: Default flags, potentially including OpenGL if needed
+          CMAKE_FLAGS="$CMAKE_FLAGS -DUSE_OPENGL_API=ON"
+        fi
+        
+        # Output the flags for the next step to use
+        echo "flags=$CMAKE_FLAGS" >> $GITHUB_OUTPUT
+
     - name: CMake Action
       uses: threeal/cmake-action@v2.1.0
       with:
@@ -28,11 +64,7 @@ jobs:
         build-dir: build
 
         # Valid inputs exactly as the action defines
-        args: >
-          -DCMAKE_BUILD_TYPE=Release
-          -DUSE_OPENGL_API=ON
-          -DBUILD_SHARED_LIBS=OFF
-
+        args: ${{ steps.cmake_args.outputs.flags }}
         run-build: true
         build-args: --config Release --target install
 
@@ -42,19 +74,19 @@ jobs:
     - name: Commit build outputs back into the same branch
       shell: bash
       run: |
-        git config user.name "github-actions"
-        git config user.email "github-actions@github.com"
+        git config user.name "github-actions-by-${{ github.actor }}"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
 
         OUTDIR="ci_builds/${{ matrix.os }}"
         mkdir -p "$OUTDIR"
-        cp -r build/* "$OUTDIR"/
+        cp -r build/* "$OUTDIR"/ #TODO# Ensure copying correct artifacts
 
         git add "$OUTDIR"
 
         if git diff --cached --quiet; then
-          echo "No changes to commit."
+          echo "No changes to commit. Exiting"
           exit 0
         fi
 
         git commit -m "Manual CI build (${{ matrix.os }})"
-        git push
+        git push "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" HEAD:$(git rev-parse --abbrev-ref HEAD)
